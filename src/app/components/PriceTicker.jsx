@@ -34,7 +34,7 @@ const PriceTicker = async () => {
                             </span>
 
                             <span className="text-gray-600 font-semibold">
-                                {product.today} টাকা/{product.unit}
+                                {product.today.toLocaleString('bn-BD')} টাকা/{product.unit}
                             </span>
 
                             <span
@@ -47,10 +47,10 @@ const PriceTicker = async () => {
                                 }
                             >
                                 {product.change.dir === "up" &&
-                                    `▲ ${product.change.pct}%`}
+                                    `▲ ${product.change.pct.toLocaleString('bn-BD')}%`}
 
                                 {product.change.dir === "down" &&
-                                    `▼ ${Math.abs(product.change.pct)}%`}
+                                    `▼ ${Math.abs(product.change.pct).toLocaleString('bn-BD')}%`}
 
                                 {product.change.dir === "flat" &&
                                     "— ০.০%"}
@@ -74,7 +74,7 @@ const PriceTicker = async () => {
                             </span>
 
                             <span className="text-gray-600 font-semibold">
-                                {product.today} টাকা/{product.unit}
+                                {product.today.toLocaleString('bn-BD')} টাকা/{product.unit}
                             </span>
 
                             <span
@@ -87,10 +87,10 @@ const PriceTicker = async () => {
                                 }
                             >
                                 {product.change.dir === "up" &&
-                                    `▲ ${product.change.pct}%`}
+                                    `▲ ${product.change.pct.toLocaleString('bn-BD')}%`}
 
                                 {product.change.dir === "down" &&
-                                    `▼ ${Math.abs(product.change.pct)}%`}
+                                    `▼ ${Math.abs(product.change.pct).toLocaleString('bn-BD')}%`}
 
                                 {product.change.dir === "flat" &&
                                     "— ০.০%"}

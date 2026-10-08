@@ -20,6 +20,8 @@ const getCategory = async () => {
 const Category = async () => {
     const categoryList = await getCategory()
 
+    
+
 
     return (
         <div className="w-full border-b border-gray-200 bg-white">
@@ -30,7 +32,9 @@ const Category = async () => {
                         <Link
                             href={`/CategoryDetails/${category.slug}`}
                             key={category.id}
-                            className="flex cursor-pointer items-center gap-2 text-sm font-medium text-gray-700 transition-colors hover:text-green-700"
+                            className={`flex cursor-pointer items-center gap-2 text-sm font-medium text-gray-700 transition-colors hover:text-green-700 ${
+                                slug === category.slug ? "bg-green-700 text-white" : "text-gray-700 hover:bg-gray-100"
+                            }`}
                         >
                             <span className="text-base">{category.icon}</span>
                             <span>{category.nameBn}</span>
