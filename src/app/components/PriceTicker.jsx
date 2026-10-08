@@ -1,7 +1,7 @@
 
 const getProducts = async () => {
     const res = await fetch(
-        "https://api.api-store.workers.dev/api/bazardor/products",
+        "https://api.abcz.workers.dev/api/bazardor/products",
         {
             cache: "force-cache",
         }

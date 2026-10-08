@@ -1,0 +1,1 @@
+export const formatBn = (value) => Number(value || 0).toLocaleString("bn-BD");
