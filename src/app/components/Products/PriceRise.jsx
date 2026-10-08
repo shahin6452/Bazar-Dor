@@ -1,73 +1,89 @@
+import Link from 'next/link';
 import React from 'react';
 
 const PriceRise = ({ products }) => {
     return (
-        <div className='container mx-auto mt-15'>
-            <h2 className='text-3xl mb-7'><span className='text-red-700'>▲</span> আজ দাম বেড়েছে</h2>
+        <div className="container mx-auto mt-15 px-5">
+            {/* Section Header */}
+            <div className="mb-6 flex items-end justify-between border-b border-gray-200 pb-4">
+                <div>
+                    <h2 className="text-2xl font-bold text-gray-900 md:text-3xl">
+                        <span className="mr-2 text-red-600">▲</span>
+                        আজ দাম বেড়েছে
+                    </h2>
+                    <p className="mt-1 text-sm text-gray-500">
+                        আজ সবচেয়ে বেশি দাম বেড়েছে এমন ৬টি পণ্য
+                    </p>
+                </div>
+            </div>
+
+            {/* Cards */}
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {
-                    products.filter(product => product.change.dir === 'up')
+                    products
+                        .filter(product => product.change.dir === 'up')
                         .sort((a, b) => b.change.pct - a.change.pct)
                         .slice(0, 6)
                         .map(product => (
-                            <div key={product.id} className="card w-full border border-gray-200 bg-white shadow-sm">
-                                <div className="card-body p-4">
+                            <Link
+                                key={product.id}
+                                href={`/ProductDetail/${product.id}`}
+                                className="group block"
+                            >
+                                <div className="card w-full overflow-hidden border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-red-200 hover:shadow-lg">
+                                    <div className="card-body p-5">
 
-                                    {/* Product Info */}
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-2xl">
-                                            {product.image}
+                                        {/* Product Info */}
+                                        <div className="flex items-center gap-4">
+                                            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-red-50 text-3xl transition-colors group-hover:bg-red-100">
+                                                {product.image}
+                                            </div>
+
+                                            <div className="min-w-0">
+                                                <h2 className="truncate text-base font-bold text-gray-900">
+                                                    {product.nameBn}
+                                                </h2>
+
+                                                <p className="mt-1 text-xs text-gray-500">
+                                                    প্রতি কেজি
+                                                </p>
+                                            </div>
                                         </div>
 
-                                        <div>
-                                            <h2 className="text-base font-bold text-gray-900">
-                                                {product.nameBn}
-                                            </h2>
+                                        {/* Divider */}
+                                        <div className="my-5 border-t border-gray-100"></div>
 
-                                            <p className="text-xs text-gray-500">
-                                                প্রতি কেজি
-                                            </p>
+                                        {/* Price */}
+                                        <div className="flex items-end justify-between">
+                                            <div>
+                                                <p className="text-xs font-medium text-gray-500">
+                                                    আজকের দাম
+                                                </p>
+
+                                                <p className="mt-1 text-2xl font-bold text-gray-900">
+                                                    {product.today.toLocaleString("bn-BD")}
+                                                    <span className="ml-1 text-sm font-medium text-gray-500">
+                                                        টাকা
+                                                    </span>
+                                                </p>
+                                            </div>
+
+                                            {/* Change */}
+                                            <span className="rounded-full bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600">
+                                                {product.change.dir === "up" &&
+                                                    `▲ ${Math.abs(product.change.pct)
+                                                        .toFixed(1)
+                                                        .replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d])}%`}
+                                            </span>
                                         </div>
+
                                     </div>
-
-                                    {/* Price */}
-                                    <div className="mt-5 flex items-end justify-between">
-                                        <div>
-                                            <p className="text-xs text-gray-500">
-                                                আজকের দাম
-                                            </p>
-
-                                            <p className="mt-1 text-xl font-bold text-gray-900">
-                                                {product.today.toLocaleString("bn-BD")}
-                                                <span className="text-sm font-medium ml-1">
-                                                    টাকা
-                                                </span>
-                                            </p>
-                                        </div>
-
-                                        {/* Change */}
-                                        <span
-                                            className={`rounded-full px-3 py-1 text-sm font-medium ${product.change.dir === "up"
-                                                ? "bg-red-50 text-red-600"
-                                                : product.change.dir === "down"
-                                                    ? "bg-green-50 text-green-600"
-                                                    : "bg-gray-100 text-black"
-                                                }`}
-                                        >
-                                            {product.change.dir === "up" &&
-                                                `▼ ${Math.abs(product.change.pct)
-                                                    .toFixed(1)
-                                                    .replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d])}%`}
-                                        </span>
-
-                                    </div>
-
                                 </div>
-                            </div>
+                            </Link>
                         ))
                 }
             </div>
-        </div >
+        </div>
     );
 };
 
