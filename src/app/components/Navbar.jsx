@@ -35,7 +35,7 @@ export default function Navbar() {
                                 height={20}
                             />
                         </div>
-                
+
                         <div>
                             <h1 className="text-xl font-bold leading-tight text-gray-900">
                                 বাজার দর
@@ -53,15 +53,17 @@ export default function Navbar() {
                             সাইন ইন
                         </button>
 
-                        <Button
-                            className=" cursor-pointer bg-green-700 px-5 text-sm font-medium text-white"
-                            radius="md"
-                        >
-                            সাইন আপ
-                        </Button>
+                        <Link href='/sign-up'>
+                            <Button
+                                className=" cursor-pointer bg-green-700 px-5 text-sm font-medium text-white"
+                                radius="md"
+                            >
+                                সাইন আপ
+                            </Button>
+                        </Link>
                     </div>
                 </nav>
-                
+
             </div>
         </div >
     );

@@ -1,47 +1,40 @@
-"use client";
-
+import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
 
-const Category = () => {
-    const [categoryList, setCategoryList] = useState([]);
-    const pathname = usePathname();
+const getCategory = async () => {
+    const res = await fetch(
+        "https://api.api-store.workers.dev/api/bazardor/categories",
+        {
+            cache: "force-cache",
+        }
+    );
 
-    const currentSlug = pathname.split("/").filter(Boolean).pop();
+    if (!res.ok) {
+        throw new Error("Failed to fetch categories");
+    }
 
-    useEffect(() => {
-        const getCategory = async () => {
-            const res = await fetch(
-                "https://api.api-store.workers.dev/api/bazardor/categories"
-            );
+    return res.json();
+};
 
-            if (!res.ok) {
-                throw new Error("Failed to fetch categories");
-            }
-
-            const data = await res.json();
-            setCategoryList(data);
-        };
-
-        getCategory();
-    }, []);
+const Category = async () => {
+    const categoryList = await getCategory();
 
     return (
-        <div className="w-full border-b border-gray-200 bg-white">
-            <div className="container mx-auto flex h-14 items-center gap-8 px-4">
+        <div className="w-full border-b border-gray-200">
+            <div className="container mx-auto flex min-h-14 items-center gap-2 overflow-x-auto px-4 sm:gap-4 md:gap-6 lg:gap-8">
                 {categoryList.map((category) => (
                     <Link
                         href={`/CategoryDetails/${category.slug}`}
                         key={category.id}
-                        className={`flex cursor-pointer items-center gap-2 text-sm font-medium transition-colors ${
-                            currentSlug === category.slug
-                                ? "bg-green-700 text-white rounded-lg px-4 py-2"
-                                : "text-gray-700 hover:bg-gray-100"
-                        }`}
+                        className="flex shrink-0 items-center gap-2 whitespace-nowrap px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:text-green-700 sm:px-4"
                     >
-                        <span className="text-base">{category.icon}</span>
-                        <span>{category.nameBn}</span>
+                        <span className="text-base">
+                            {category.icon}
+                        </span>
+
+                        <span>
+                            {category.nameBn}
+                        </span>
                     </Link>
                 ))}
             </div>
