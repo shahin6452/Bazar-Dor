@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Category from "./components/Category";
 import PriceTicker from "./components/PriceTicker";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,8 +28,10 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
         <Navbar />
-        <Category/>
-        <PriceTicker/>
+        <Suspense fallback={null}>
+          <Category />
+        </Suspense>
+        <PriceTicker />
         <main>
           {children}
         </main>

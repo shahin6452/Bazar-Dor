@@ -24,9 +24,9 @@ export default function Navbar() {
     return (
         <div className="border-b border-gray-200">
             <div className="container mx-auto">
-                <nav className="flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white px-5">
+                <nav className="flex h-20 w-full items-center justify-between border-b border-gray-200 bg-white px-5">
                     {/* Left */}
-                    <Link href='/' className="flex items-center gap-3">
+                    <Link href='/' className="flex items-center gap-3 ">
                         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-green-700 text-white">
                             <Image
                                 src="/assets/logo-icon.png"
@@ -35,13 +35,13 @@ export default function Navbar() {
                                 height={20}
                             />
                         </div>
-
+                
                         <div>
-                            <h1 className="text-base font-bold leading-tight text-gray-900">
+                            <h1 className="text-xl font-bold leading-tight text-gray-900">
                                 বাজার দর
                             </h1>
 
-                            <p className="text-[10px] text-gray-500">
+                            <p className="text-[14px] text-gray-500">
                                 {today}
                             </p>
                         </div>

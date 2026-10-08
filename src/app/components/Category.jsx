@@ -1,53 +1,52 @@
-import Link from 'next/link';
-import React from 'react';
+"use client";
 
-const getCategory = async () => {
-    const res = await fetch(
-        "https://api.api-store.workers.dev/api/bazardor/categories",
-        {
-            cache: "force-cache",
-        }
-    );
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
-    if (!res.ok) {
-        throw new Error("Failed to fetch categories");
-    }
+const Category = () => {
+    const [categoryList, setCategoryList] = useState([]);
+    const pathname = usePathname();
 
-    return res.json();
-};
+    const currentSlug = pathname.split("/").filter(Boolean).pop();
 
+    useEffect(() => {
+        const getCategory = async () => {
+            const res = await fetch(
+                "https://api.api-store.workers.dev/api/bazardor/categories"
+            );
 
-const Category = async () => {
-    const categoryList = await getCategory()
+            if (!res.ok) {
+                throw new Error("Failed to fetch categories");
+            }
 
-    
+            const data = await res.json();
+            setCategoryList(data);
+        };
 
+        getCategory();
+    }, []);
 
     return (
         <div className="w-full border-b border-gray-200 bg-white">
-            <div className="container mx-auto flex h-14 items-center  gap-8 px-4">
-
-                {
-                    categoryList.map(category => (
-                        <Link
-                            href={`/CategoryDetails/${category.slug}`}
-                            key={category.id}
-                            className={`flex cursor-pointer items-center gap-2 text-sm font-medium text-gray-700 transition-colors hover:text-green-700 ${
-                                slug === category.slug ? "bg-green-700 text-white" : "text-gray-700 hover:bg-gray-100"
-                            }`}
-                        >
-                            <span className="text-base">{category.icon}</span>
-                            <span>{category.nameBn}</span>
-                        </Link>
-                    ))
-                }
-
-
+            <div className="container mx-auto flex h-14 items-center gap-8 px-4">
+                {categoryList.map((category) => (
+                    <Link
+                        href={`/CategoryDetails/${category.slug}`}
+                        key={category.id}
+                        className={`flex cursor-pointer items-center gap-2 text-sm font-medium transition-colors ${
+                            currentSlug === category.slug
+                                ? "bg-green-700 text-white rounded-lg px-4 py-2"
+                                : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                    >
+                        <span className="text-base">{category.icon}</span>
+                        <span>{category.nameBn}</span>
+                    </Link>
+                ))}
             </div>
-        </div >
+        </div>
     );
-
-
 };
 
 export default Category;
