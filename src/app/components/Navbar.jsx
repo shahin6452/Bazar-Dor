@@ -5,11 +5,13 @@ import { Button } from "@heroui/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Category from "./Category";
-import { useSession } from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
+import ProfileMenu from './ProfileMenu';
 
 export default function Navbar() {
 
     const [today, setToday] = useState("");
+    const { data: session, isPending } = useSession();
 
     useEffect(() => {
         setToday(
@@ -22,40 +24,37 @@ export default function Navbar() {
         );
     }, []);
 
-    const {data:session} = useSession();
-
     const authLinks = <>
-        {
-            session?.user ? <>
-            
-               import ProfileMenu from "@/components/ProfileMenu";
+        {isPending ? (
+            <div className="flex items-center justify-center">
+                <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-green-700"></div>
+            </div>
+        ) : session?.user ? <>
+            <ProfileMenu
+                name={session?.user.name}
+                fullName={session?.user.name}
+                email={session?.user.email}
+                onSignOut={() => signOut()}
+            />
 
-   <ProfileMenu
-     name="Rezwan"
-     fullName="Rezwan Ahmed"
-     email="rezwanahmed@gmail.com"
-     onProfile={() => router.push("/profile")}
-     onSignOut={() => signOut()}
-   />
-            
-            </> : <>
+        </> : <>
             <Link href='/sign-in'>
-                            <button className="cursor-pointer text-sm font-medium text-gray-700 hover:text-green-700">
-                                সাইন ইন
-                            </button>
-                        </Link>
+                <button className="cursor-pointer text-sm font-medium text-gray-700 hover:text-green-700">
+                    সাইন ইন
+                </button>
+            </Link>
 
-                        <Link href='/sign-up'>
-                            <Button
-                                className=" cursor-pointer bg-green-700 px-5 text-sm font-medium text-white"
-                                radius="md"
-                            >
-                                সাইন আপ
-                            </Button>
-                        </Link>
-            </>
+            <Link href='/sign-up'>
+                <Button
+                    className=" cursor-pointer bg-green-700 px-5 text-sm font-medium text-white"
+                    radius="md"
+                >
+                    সাইন আপ
+                </Button>
+            </Link>
+        </>
         }
-        
+
     </>
 
 
