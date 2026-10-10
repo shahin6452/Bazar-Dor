@@ -348,7 +348,7 @@ const SignUp = () => {
                         <p className="mt-1 w-full text-center text-[10px] text-gray-500 sm:text-[11px]">
                             অ্যাকাউন্ট আছে?{" "}
                             <Link
-                                href="/login"
+                                href="/sign-in"
                                 className="font-medium text-green-700 hover:underline"
                             >
                                 সাইন ইন করুন

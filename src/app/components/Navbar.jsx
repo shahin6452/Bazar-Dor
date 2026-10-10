@@ -1,9 +1,11 @@
 "use client";
+
 import Link from 'next/link';
 import { Button } from "@heroui/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Category from "./Category";
+import { useSession } from "@/lib/auth-client";
 
 export default function Navbar() {
 
@@ -19,6 +21,42 @@ export default function Navbar() {
             }).format(new Date())
         );
     }, []);
+
+    const {data:session} = useSession();
+
+    const authLinks = <>
+        {
+            session?.user ? <>
+            
+               import ProfileMenu from "@/components/ProfileMenu";
+
+   <ProfileMenu
+     name="Rezwan"
+     fullName="Rezwan Ahmed"
+     email="rezwanahmed@gmail.com"
+     onProfile={() => router.push("/profile")}
+     onSignOut={() => signOut()}
+   />
+            
+            </> : <>
+            <Link href='/sign-in'>
+                            <button className="cursor-pointer text-sm font-medium text-gray-700 hover:text-green-700">
+                                সাইন ইন
+                            </button>
+                        </Link>
+
+                        <Link href='/sign-up'>
+                            <Button
+                                className=" cursor-pointer bg-green-700 px-5 text-sm font-medium text-white"
+                                radius="md"
+                            >
+                                সাইন আপ
+                            </Button>
+                        </Link>
+            </>
+        }
+        
+    </>
 
 
     return (
@@ -49,18 +87,7 @@ export default function Navbar() {
 
                     {/* Right */}
                     <div className="flex items-center gap-6">
-                        <button className="cursor-pointer text-sm font-medium text-gray-700 hover:text-green-700">
-                            সাইন ইন
-                        </button>
-
-                        <Link href='/sign-up'>
-                            <Button
-                                className=" cursor-pointer bg-green-700 px-5 text-sm font-medium text-white"
-                                radius="md"
-                            >
-                                সাইন আপ
-                            </Button>
-                        </Link>
+                        {authLinks}
                     </div>
                 </nav>
 
