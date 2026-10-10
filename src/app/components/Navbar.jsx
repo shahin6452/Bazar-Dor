@@ -34,7 +34,11 @@ export default function Navbar() {
                 name={session?.user.name}
                 fullName={session?.user.name}
                 email={session?.user.email}
-                onSignOut={() => signOut()}
+                onSignOut={() => signOut(
+                    fetch, {
+                        callbackURL: "/"
+                    }
+                )}
             />
 
         </> : <>

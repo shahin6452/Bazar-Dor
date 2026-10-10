@@ -4,8 +4,10 @@ import { Card, Button, Description, FieldError, Form, Input, Label, TextField } 
 
 import React from "react";
 import Link from "next/link";
-import { signUp } from "@/lib/auth-client";
+import { signIn, signUp } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
+
 
 const SignUp = () => {
     const router = useRouter()
@@ -16,21 +18,39 @@ const SignUp = () => {
         const data = Object.fromEntries(formData.entries());
         // Convert FormData to plain object
 
-        console.log('datatest', data)
+        if(data.password !== data.confirmPassword){
+            toast.error("পাসওয়ার্ড মিলছে না।");
+            return;
+        }
+
         const { data: resData, error } = await signUp.email({
             name: data.name,
             email: data.email,
             password: data.password,
+            confirmPassword: data.confirmPassword,
         });
-
+        if(error){
+            toast.error(error.message || "Failed to Create an Account!");
+            return;
+        }        
+        
+        toast.success("Account created successfully!");
         router.push('/')
 
     };
 
     const handleGoogleSignIn = async () => {
-        const data = await authClient.signIn.social({
+        const resData = await signIn.social({
             provider: "google",
         });
+        console.log('Google Sign-In Response:', resData);
+    }
+
+    const handleGitHubSignIn = async () => {
+        const resData = await signIn.social({
+            provider: "github",
+        });
+        console.log('GitHub Sign-In Response:', resData);
     }
 
 
@@ -182,6 +202,7 @@ const SignUp = () => {
                         {/* Social Login */}
                         <div className="grid w-full grid-cols-1 gap-2.5 sm:grid-cols-2">
                             <Button
+                                onClick={handleGoogleSignIn}
                                 type="button"
                                 variant="bordered"
                                 className="h-[38px] w-full rounded-lg border border-gray-300 px-2 text-xs font-medium text-gray-800 sm:text-[11px]"
@@ -191,6 +212,7 @@ const SignUp = () => {
                             </Button>
 
                             <Button
+                                onClick={handleGitHubSignIn}
                                 type="button"
                                 variant="bordered"
                                 className="h-[38px] w-full rounded-lg border border-gray-300 px-2 text-xs font-medium text-gray-800 sm:text-[11px]"

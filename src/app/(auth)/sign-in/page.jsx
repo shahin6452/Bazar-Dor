@@ -1,11 +1,10 @@
 "use client";
 
 import { Card, Button, Description, FieldError, Form, Input, Label, TextField } from "@heroui/react";
-
-
 import React from "react";
 import Link from "next/link";
 import { signIn } from "@/lib/auth-client";
+import toast, { Toaster } from "react-hot-toast";
 
 const SignIn = () => {
 
@@ -24,9 +23,22 @@ const SignIn = () => {
             callbackURL: "/"
         });
 
-        console.log(resData, error)
+        toast.success("Logged in successfully!");
     };
 
+    const handleGoogleSignIn = async () => {
+        const resData = await signIn.social({
+            provider: "google",
+        });
+        console.log('Google Sign-In Response:', resData);
+    };
+
+    const handleGitHubSignIn = async () => {
+        const resData = await signIn.social({
+            provider: "github",
+        });
+        console.log('GitHub Sign-In Response:', resData);
+    };
 
     return (
         <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-8 sm:px-6 sm:py-10">
@@ -123,6 +135,7 @@ const SignIn = () => {
                         {/* Social Login */}
                         <div className="grid w-full grid-cols-1 gap-2.5 sm:grid-cols-2">
                             <Button
+                                onClick={handleGoogleSignIn}
                                 type="button"
                                 variant="bordered"
                                 className="h-[38px] w-full rounded-lg border border-gray-300 px-2 text-xs font-medium text-gray-800 sm:text-[11px]"
@@ -132,6 +145,7 @@ const SignIn = () => {
                             </Button>
 
                             <Button
+                                onClick={handleGitHubSignIn}
                                 type="button"
                                 variant="bordered"
                                 className="h-[38px] w-full rounded-lg border border-gray-300 px-2 text-xs font-medium text-gray-800 sm:text-[11px]"
