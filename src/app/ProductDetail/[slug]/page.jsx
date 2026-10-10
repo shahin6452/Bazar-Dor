@@ -87,7 +87,7 @@ function normalizeProduct(p) {
 }
 
 const PageSkeleton = () => (
-    <div className="min-h-screen bg-gray-50 px-4 py-6">
+    <div className="mx-auto w-full max-w-6xl px-3 sm:px-6 lg:px-8">
         <div className="container mx-auto max-w-4xl px-0 sm:px-4">
             <div className="mb-4 h-4 w-48 animate-pulse rounded bg-gray-200" />
             <div className="mb-5 h-32 animate-pulse rounded-2xl border border-gray-200 bg-white" />
@@ -136,7 +136,7 @@ async function ProductContent({ params }) {
 
     return (
         <div className="min-h-screen bg-gray-50 px-4 py-6">
-            <div className="container mx-auto max-w-4xl px-0 sm:px-4">
+            <div className="mx-auto w-full container px-3 sm:px-6 lg:px-8">
 
                 {/* Breadcrumb */}
                 <nav className="mb-4 flex flex-wrap items-center gap-1.5 text-xs text-gray-500">
