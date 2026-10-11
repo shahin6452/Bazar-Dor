@@ -54,7 +54,7 @@ const Category = () => {
                         <Link
                             href={`/CategoryDetails/${category.slug}`}
                             key={category.id}
-                            className={`flex shrink-0 items-center gap-1 whitespace-nowrap px-5 py-3 text-sm font-medium transition-colors sm:gap-2 sm:px-3 ${
+                            className={`flex shrink-0 items-center gap-1 whitespace-nowrap px-5 py-2 text-sm font-medium transition-colors sm:gap-2 sm:px-3 ${
                                 pathName === `/CategoryDetails/${category.slug}` 
                                 ? 'bg-green-700 text-white rounded-2xl'
                                 : 'text-gray-700 hover:text-green-700'
