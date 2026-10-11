@@ -46,7 +46,7 @@ const PriceDecrease = ({ products }) => {
                                                 </h2>
 
                                                 <p className="mt-1 text-xs text-gray-500">
-                                                    প্রতি কেজি
+                                                    প্রতি {product.unit}
                                                 </p>
                                             </div>
                                         </div>

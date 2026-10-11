@@ -9,6 +9,7 @@ export async function proxy(request) {
 
     if (!session) {
         const signInUrl = new URL("/sign-in", request.url);
+        signInUrl.searchParams.set("message", "login-required");
         signInUrl.searchParams.set(
             "callbackURL",
             request.nextUrl.pathname + request.nextUrl.search

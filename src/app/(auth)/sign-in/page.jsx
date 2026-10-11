@@ -1,48 +1,106 @@
 "use client";
 
-import { Suspense } from "react";
-import { Card, Button, FieldError, Form, Input, Label, TextField } from "@heroui/react";
+import { Suspense, useEffect } from "react";
+import {
+    Card,
+    Button,
+    FieldError,
+    Form,
+    Input,
+    Label,
+    TextField,
+} from "@heroui/react";
 import React from "react";
 import Link from "next/link";
 import { signIn } from "@/lib/auth-client";
-import toast, { Toaster } from "react-hot-toast";
-import { useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const SignInForm = () => {
     const searchParams = useSearchParams();
+    const router = useRouter();
+
+    const message = searchParams.get("message");
+    const queryString = searchParams.toString();
+
+    useEffect(() => {
+        if (message !== "login-required") return;
+
+        const params = new URLSearchParams(queryString);
+        params.delete("message");
+
+        router.replace(
+            `/sign-in${params.toString() ? `?${params.toString()}` : ""}`,
+            { scroll: false }
+        );
+
+        toast.error("এই পেজটি দেখতে আগে লগইন করুন।");
+    }, [message, queryString, router]);
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const data = Object.fromEntries(formData.entries());
 
-        const { data: resData, error } = await signIn.email({
-            email: data.email,
-            password: data.password,
-            rememberMe: true,
-            callbackURL: searchParams.get("callbackURL") || "/",
-        });
+        try {
+            const formData = new FormData(e.currentTarget);
+            const data = Object.fromEntries(formData.entries());
 
-        if (error) {
-            toast.error(error.message || "Login failed!");
-            return;
+            const { data: resData, error } = await signIn.email({
+                email: data.email,
+                password: data.password,
+                rememberMe: true,
+                callbackURL: searchParams.get("callbackURL") || "/",
+            });
+
+            if (error) {
+                toast.error(error.message || "Login failed!");
+                return;
+            }
+
+            if (!resData) {
+                toast.error("Login failed! Please try again.");
+                return;
+            }
+
+            toast.success("Logged in successfully!");
+        } catch (error) {
+            console.error("Login error:", error);
+
+            toast.error(
+                error instanceof Error ? error.message : "Login failed!"
+            );
         }
-
-        toast.success("Logged in successfully!");
     };
 
     const handleGoogleSignIn = async () => {
-        await signIn.social({
-            provider: "google",
-            callbackURL: searchParams.get("callbackURL") || "/",
-        });
+        try {
+            const { error } = await signIn.social({
+                provider: "google",
+                callbackURL: searchParams.get("callbackURL") || "/",
+            });
+
+            if (error) {
+                toast.error(error.message || "Google login failed!");
+            }
+        } catch (error) {
+            console.error("Google login error:", error);
+            toast.error("Google login failed!");
+        }
     };
 
     const handleGitHubSignIn = async () => {
-        await signIn.social({
-            provider: "github",
-            callbackURL: searchParams.get("callbackURL") || "/",
-        });
+        try {
+            const { error } = await signIn.social({
+                provider: "github",
+                callbackURL: searchParams.get("callbackURL") || "/",
+            });
+
+            if (error) {
+                toast.error(error.message || "GitHub login failed!");
+            }
+        } catch (error) {
+            console.error("GitHub login error:", error);
+            toast.error("GitHub login failed!");
+        }
     };
 
     return (
@@ -52,6 +110,7 @@ const SignInForm = () => {
                     <h1 className="text-[25px] font-bold leading-tight text-gray-900 sm:text-2xl">
                         সাইন ইন
                     </h1>
+
                     <p className="mt-1 text-[12px] leading-4 text-gray-500 sm:text-[11px]">
                         বিস্তারিত দাম, বাজার তুলনা ও প্রোফাইল দেখতে অ্যাকাউন্টে ঢুকুন।
                     </p>
@@ -76,10 +135,13 @@ const SignInForm = () => {
                             <Label className="text-[14px] font-medium text-gray-700">
                                 ইমেইল
                             </Label>
+
                             <Input
+                                autoComplete="email"
                                 placeholder="you@example.com"
                                 className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-green-700"
                             />
+
                             <FieldError className="text-xs text-red-600" />
                         </TextField>
 
@@ -98,10 +160,13 @@ const SignInForm = () => {
                             <Label className="text-[14px] font-medium text-gray-700">
                                 পাসওয়ার্ড
                             </Label>
+
                             <Input
+                                autoComplete="current-password"
                                 placeholder="কমপক্ষে ৮ অক্ষর"
                                 className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-green-700"
                             />
+
                             <FieldError className="text-xs text-red-600" />
                         </TextField>
 
@@ -114,7 +179,9 @@ const SignInForm = () => {
 
                         <div className="my-1 flex w-full items-center gap-3">
                             <div className="h-px flex-1 bg-gray-200" />
-                            <span className="shrink-0 text-xs text-gray-500">অথবা</span>
+                            <span className="shrink-0 text-xs text-gray-500">
+                                অথবা
+                            </span>
                             <div className="h-px flex-1 bg-gray-200" />
                         </div>
 
@@ -167,7 +234,6 @@ export default function SignIn() {
     return (
         <Suspense fallback={<div className="min-h-screen" />}>
             <SignInForm />
-            <Toaster position="top-center" />
         </Suspense>
     );
 }

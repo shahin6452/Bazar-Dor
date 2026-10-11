@@ -1,9 +1,11 @@
 "use client";
 
 import { signOut, updateUser, useSession } from "@/lib/auth-client";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function ProfileCard() {
     const [name, setName] = useState("");
@@ -13,13 +15,19 @@ export default function ProfileCard() {
         const formData = new FormData(e.currentTarget);
         const userData = Object.fromEntries(formData.entries())
 
-        console.log('updatedata', userData)
 
-        const { data: resData} = await updateUser({
+        const { data: resData, error } = await updateUser({
             name: userData.name
         });
 
-        console.log("after change", resData)
+        if (error) {
+            toast.error(error.message || 'Information Update Failed!')
+            return
+        }
+
+        toast.success('Information Updated Successfuly')
+
+
 
 
     };
@@ -43,9 +51,11 @@ export default function ProfileCard() {
                 <div className="mb-4 flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
 
                     <div className="flex items-center gap-3">
-                        <img
+                        <Image
                             src="/profile.jpg"
                             alt="Profile"
+                            height={48}
+                            width={48}
                             className="h-12 w-12 rounded-xl object-cover"
                         />
 
@@ -61,17 +71,28 @@ export default function ProfileCard() {
                     </div>
 
                     <button
-                        onClick={() => signOut({
-                            fetchOptions:{
-                                onSuccess: () => {
-                                    router.push('/sign-in')
-                                }
+                        onClick={async () => {
+                            try {
+                                await signOut({
+                                    fetchOptions: {
+                                        onSuccess: () => {
+                                            toast.success("সফলভাবে সাইন আউট হয়েছে!");
+                                            router.push("/sign-in");
+                                        },
+                                        onError: (error) => {
+                                            toast.error(
+                                                error?.error?.message || "সাইন আউট করা যায়নি!"
+                                            );
+                                        },
+                                    },
+                                });
+                            } catch (error) {
+                                toast.error("নেটওয়ার্ক সমস্যা! আবার চেষ্টা করুন।");
                             }
-                        })}
-                        
-                        className="rounded-lg border border-red-400 px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+                        }}
+                        className="rounded-lg border border-red-400 px-3 py-2 text-sm cursor-pointer"
                     >
-                        ↩ সাইন আউট
+                        ↪ সাইন আউট
                     </button>
 
                 </div>
