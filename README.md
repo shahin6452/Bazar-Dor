@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🛒 বাজার দর | BazarDor
 
-## Getting Started
+**প্রয়োজনীয় পণ্যের দাম এক নজরে।**
 
-First, run the development server:
+Bazar Dor is a Bengali-language market price tracking web application that helps users explore daily prices of essential products, compare market-wise prices, and identify which products have increased or decreased in price.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+🔗 **Live Link:** (https://bazar-dor-git-main-t5-5438.vercel.app/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 📖 About the Project
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+বাজার দর একটি সহজ ও ব্যবহারবান্ধব ওয়েব অ্যাপ্লিকেশন, যেখানে চাল, ডাল, তেল, সবজি, মাছ, মাংস, ডিম ও অন্যান্য নিত্যপ্রয়োজনীয় পণ্যের দাম দেখা যায়।
 
-## Learn More
+Users can explore products, browse categories, compare prices across markets, track daily price changes, and access protected product details after signing in.
 
-To learn more about Next.js, take a look at the following resources:
+The application is built with Next.js and designed to provide a responsive experience on mobile, tablet, and desktop devices.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ✨ Key Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 1. 📈 Live-Style Price Ticker
+- Displays product names, prices, units, and price-change indicators.
+- Uses a continuously scrolling ticker to highlight market updates.
+- Shows upward, downward, and unchanged price indicators.
 
-## Deploy on Vercel
+### 2. 🔺 Price Increase and Decrease Sections
+- Highlights the top products with rising prices.
+- Displays products with falling prices.
+- Helps users quickly identify daily price movements.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. 🛍️ All Products
+- Displays products in a responsive card grid.
+- Shows product illustrations, names, units, prices, and percentage changes.
+- Allows users to open product details from product cards.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4. 🗂️ Category Browsing
+- Organizes products by category.
+- Supports filtering products by category.
+- Provides price sorting options, including lowest-to-highest and highest-to-lowest.
+- Handles numeric prices rather than sorting them as text.
+
+### 5. 🏪 Market-Wise Price Comparison
+- Displays product price summaries.
+- Shows minimum and maximum prices.
+- Presents market-wise price information in a table.
+- Supports horizontal scrolling for wide tables on smaller screens.
+
+### 6. 🔐 Authentication
+- Email and password authentication using Better Auth.
+- Google and GitHub social authentication support.
+- Protected pages for authenticated users.
+- Toast notifications for user feedback.
+
+### 7. 👤 User Profile
+- Displays signed-in user information.
+- Supports user name updates through the profile functionality.
+
+### 8. 📱 Responsive Design
+- Mobile-friendly layouts and navigation.
+- Responsive product grids and content sections.
+- Flexible hero section and page layouts.
+- Responsive table scrolling for smaller screens.
+
+## 🛠️ Technologies Used
+
+| Technology | Purpose |
+|---|---|
+| Next.js 16 | Application framework and routing |
+| React 19 | UI components |
+| JavaScript | Application logic |
+| Tailwind CSS 4 | Styling and responsive design |
+| daisyUI 5 | UI components and utility classes |
+| HeroUI | Additional UI components |
+| Better Auth | Authentication and session management |
+| MongoDB | Authentication data storage |
+| react-hot-toast | Toast notifications |
+| ESLint | Code quality and linting |
+
+## 📡 API Integration
+
+The application uses the Bazar Dor API to retrieve product and category information.
+
+**Default API Base URL:**
+
+`https://openapi.programming-hero.com/api/bazardor`
+
+An alternative API base URL is available:
+
+`https://api.abcz.workers.dev/api/bazardor`
+
+## 📱 Responsive Compatibility
+
+Bazar Dor is designed for:
+
+- Mobile phones
+- Tablets
+- Desktop computers
+
+The responsive layout uses Tailwind CSS breakpoints and flexible containers to help maintain usability across different screen sizes.
+
+## 🎯 Project Goals
+
+- Make everyday market prices easier to explore.
+- Help users compare prices across different markets.
+- Present price increases and decreases clearly.
+- Provide a convenient Bengali-language user experience.
+- Practice modern web development with Next.js, React, authentication, APIs, and responsive design.
+
+---
+
+**বাজার দর — প্রতিদিনের প্রয়োজনীয় পণ্যের দাম এক নজরে।** 💚
