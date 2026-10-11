@@ -4,7 +4,7 @@
 
 Bazar Dor is a Bengali-language market price tracking web application that helps users explore daily prices of essential products, compare market-wise prices, and identify which products have increased or decreased in price.
 
-🔗 **Live Link:** (https://bazar-dor-git-main-t5-5438.vercel.app/)
+🔗 **Live Link:** (https://bazar-dor-nine-mu.vercel.app/)
 
 ---
 
