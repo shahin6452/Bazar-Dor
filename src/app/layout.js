@@ -5,6 +5,7 @@ import Category from "./components/Category";
 import PriceTicker from "./components/PriceTicker";
 import { Suspense } from "react";
 import { Toaster } from "react-hot-toast";
+import Footer from "./components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,7 @@ export default function RootLayout({ children }) {
         <main>
           {children}
         </main>
+        <Footer/>
       </body>
     </html>
   );

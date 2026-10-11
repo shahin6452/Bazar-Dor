@@ -5,8 +5,11 @@ import React from "react";
 import Link from "next/link";
 import { signIn } from "@/lib/auth-client";
 import toast, { Toaster } from "react-hot-toast";
+import { useSearchParams } from "next/navigation";
 
 const SignIn = () => {
+
+    const searchParams = useSearchParams()
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -20,7 +23,7 @@ const SignIn = () => {
             email:data.email,
             password:data.password,
             rememberMe: true,
-            callbackURL: "/"
+            callbackURL: searchParams.get("callbackURL") || "/",
         });
 
         toast.success("Logged in successfully!");
@@ -29,6 +32,7 @@ const SignIn = () => {
     const handleGoogleSignIn = async () => {
         const resData = await signIn.social({
             provider: "google",
+            callbackURL: searchParams.get("callbackURL") || "/",
         });
         console.log('Google Sign-In Response:', resData);
     };
@@ -36,6 +40,7 @@ const SignIn = () => {
     const handleGitHubSignIn = async () => {
         const resData = await signIn.social({
             provider: "github",
+            callbackURL: searchParams.get("callbackURL") || "/",
         });
         console.log('GitHub Sign-In Response:', resData);
     };

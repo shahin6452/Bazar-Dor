@@ -5,11 +5,15 @@ import { Card, Button, Description, FieldError, Form, Input, Label, TextField } 
 import React from "react";
 import Link from "next/link";
 import { signIn, signUp } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 
 
 const SignUp = () => {
+
+    const searchParams = useSearchParams()
+
+
     const router = useRouter()
 
     const onSubmit = async (e) => {
@@ -27,7 +31,6 @@ const SignUp = () => {
             name: data.name,
             email: data.email,
             password: data.password,
-            confirmPassword: data.confirmPassword,
         });
         if(error){
             toast.error(error.message || "Failed to Create an Account!");
@@ -35,13 +38,14 @@ const SignUp = () => {
         }        
         
         toast.success("Account created successfully!");
-        router.push('/')
+        router.push('/sign-in')
 
     };
 
     const handleGoogleSignIn = async () => {
         const resData = await signIn.social({
             provider: "google",
+            callbackURL: searchParams.get("callbackURL") || "/",
         });
         console.log('Google Sign-In Response:', resData);
     }
@@ -49,6 +53,7 @@ const SignUp = () => {
     const handleGitHubSignIn = async () => {
         const resData = await signIn.social({
             provider: "github",
+            callbackURL: searchParams.get("callbackURL") || "/",
         });
         console.log('GitHub Sign-In Response:', resData);
     }

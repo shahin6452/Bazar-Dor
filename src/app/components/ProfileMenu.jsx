@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
 
 export default function ProfileMenu({ name, fullName, email, onProfile, onSignOut }) {
 
@@ -49,10 +48,9 @@ export default function ProfileMenu({ name, fullName, email, onProfile, onSignOu
             </Link>
 
             <button
-              onClick={() => {
+              onClick={async () => {
                 setOpen(false);
-                onSignOut();
-                toast.success("Logged out successfully!");
+                await onSignOut();
               }}
               className="block w-full py-1.5 text-left text-sm text-red-600 hover:text-red-700 cursor-pointer"
             >
