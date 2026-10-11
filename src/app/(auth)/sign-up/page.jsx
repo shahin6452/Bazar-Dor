@@ -1,67 +1,103 @@
 "use client";
-import { Card, Button, Description, FieldError, Form, Input, Label, TextField } from "@heroui/react";
 
-
-import React from "react";
+import React, { Suspense } from "react";
+import {
+    Card,
+    Button,
+    Description,
+    FieldError,
+    Form,
+    Input,
+    Label,
+    TextField,
+} from "@heroui/react";
 import Link from "next/link";
 import { signIn, signUp } from "@/lib/auth-client";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 
-
-const SignUp = () => {
-
-    const searchParams = useSearchParams()
-
-
-    const router = useRouter()
+const SignUpForm = () => {
+    const searchParams = useSearchParams();
+    const router = useRouter();
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const data = Object.fromEntries(formData.entries());
-        // Convert FormData to plain object
 
-        if(data.password !== data.confirmPassword){
-            toast.error("পাসওয়ার্ড মিলছে না।");
-            return;
+        try {
+            const formData = new FormData(e.currentTarget);
+            const data = Object.fromEntries(formData.entries());
+
+            if (data.password !== data.confirmPassword) {
+                toast.error("পাসওয়ার্ড মিলছে না।");
+                return;
+            }
+
+            const { data: resData, error } = await signUp.email({
+                name: data.name,
+                email: data.email,
+                password: data.password,
+            });
+
+            if (error) {
+                toast.error(
+                    error.message || "Failed to Create an Account!"
+                );
+                return;
+            }
+
+            if (!resData) {
+                toast.error("অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।");
+                return;
+            }
+
+            toast.success("Account created successfully!");
+            router.push("/sign-in");
+        } catch (error) {
+            console.error("Signup error:", error);
+
+            toast.error(
+                error instanceof Error
+                    ? error.message
+                    : "অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।"
+            );
         }
-
-        const { data: resData, error } = await signUp.email({
-            name: data.name,
-            email: data.email,
-            password: data.password,
-        });
-        if(error){
-            toast.error(error.message || "Failed to Create an Account!");
-            return;
-        }        
-        
-        toast.success("Account created successfully!");
-        router.push('/sign-in')
-
     };
 
     const handleGoogleSignIn = async () => {
-        const resData = await signIn.social({
-            provider: "google",
-            callbackURL: searchParams.get("callbackURL") || "/",
-        });
-        console.log('Google Sign-In Response:', resData);
-    }
+        try {
+            const { error } = await signIn.social({
+                provider: "google",
+                callbackURL: searchParams.get("callbackURL") || "/",
+            });
+
+            if (error) {
+                toast.error(error.message || "Google login failed!");
+            }
+        } catch (error) {
+            console.error("Google login error:", error);
+            toast.error("Google দিয়ে লগইন করা যায়নি।");
+        }
+    };
 
     const handleGitHubSignIn = async () => {
-        const resData = await signIn.social({
-            provider: "github",
-            callbackURL: searchParams.get("callbackURL") || "/",
-        });
-        console.log('GitHub Sign-In Response:', resData);
-    }
+        try {
+            const { error } = await signIn.social({
+                provider: "github",
+                callbackURL: searchParams.get("callbackURL") || "/",
+            });
 
+            if (error) {
+                toast.error(error.message || "GitHub login failed!");
+            }
+        } catch (error) {
+            console.error("GitHub login error:", error);
+            toast.error("GitHub দিয়ে লগইন করা যায়নি।");
+        }
+    };
 
     return (
         <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-8 sm:px-6 sm:py-10">
-            <div className="w-full max-w-125">
+            <div className="w-full max-w-[500px]">
 
                 {/* Header */}
                 <div className="mb-5 text-center sm:mb-6">
@@ -80,7 +116,6 @@ const SignUp = () => {
                         className="flex w-full flex-col gap-4 p-[18px] sm:p-5"
                         onSubmit={onSubmit}
                     >
-
                         {/* Name */}
                         <TextField
                             isRequired
@@ -98,6 +133,7 @@ const SignUp = () => {
                             </Label>
 
                             <Input
+                                autoComplete="name"
                                 placeholder="যেমন: রহিম উদ্দিন"
                                 className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-green-700"
                             />
@@ -123,6 +159,7 @@ const SignUp = () => {
                             </Label>
 
                             <Input
+                                autoComplete="email"
                                 placeholder="you@example.com"
                                 className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-green-700"
                             />
@@ -149,6 +186,7 @@ const SignUp = () => {
                             </Label>
 
                             <Input
+                                autoComplete="new-password"
                                 placeholder="কমপক্ষে ৮ অক্ষর"
                                 className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-green-700"
                             />
@@ -178,6 +216,7 @@ const SignUp = () => {
                             </Label>
 
                             <Input
+                                autoComplete="new-password"
                                 placeholder="আবার লিখুন"
                                 className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-green-700"
                             />
@@ -247,10 +286,16 @@ const SignUp = () => {
                 >
                     ← হোম পেজে ফিরে যান
                 </Link>
-
             </div>
         </main>
     );
 };
 
-export default SignUp;
+export default function SignUp() {
+    return (
+        <Suspense fallback={<div className="min-h-screen" />}>
+            <SignUpForm />
+            <Toaster position="top-center" />
+        </Suspense>
+    );
+}

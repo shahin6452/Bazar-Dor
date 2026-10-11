@@ -2,8 +2,10 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const getCategory = async () => {
+
     const res = await fetch(
         "https://openapi.programming-hero.com/api/bazardor/categories",
         {
@@ -19,6 +21,7 @@ const getCategory = async () => {
 };
 
 const Category = () => {
+    const pathName = usePathname();
     const [categoryList, setCategoryList] = useState([]);
     const [showAll, setShowAll] = useState(false);
     const menuRef = useRef(null);
@@ -51,7 +54,11 @@ const Category = () => {
                         <Link
                             href={`/CategoryDetails/${category.slug}`}
                             key={category.id}
-                            className="flex shrink-0 items-center gap-1 whitespace-nowrap px-2 py-4 text-sm font-medium text-gray-700 transition-colors hover:text-green-700 sm:gap-2 sm:px-3"
+                            className={`flex shrink-0 items-center gap-1 whitespace-nowrap px-5 py-3 text-sm font-medium transition-colors sm:gap-2 sm:px-3 ${
+                                pathName === `/CategoryDetails/${category.slug}` 
+                                ? 'bg-green-700 text-white rounded-2xl'
+                                : 'text-gray-700 hover:text-green-700'
+                            }`}
                         >
                             <span>{category.icon}</span>
                             <span>{category.nameBn}</span>

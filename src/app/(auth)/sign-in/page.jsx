@@ -16,8 +16,6 @@ const SignInForm = () => {
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
 
-        console.log("data test", data);
-
         const { data: resData, error } = await signIn.email({
             email: data.email,
             password: data.password,
