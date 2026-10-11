@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import {
     Card,
     Button,
@@ -12,19 +12,47 @@ import {
 } from "@heroui/react";
 import React from "react";
 import Link from "next/link";
-import { signIn } from "@/lib/auth-client";
+import { signIn, useSession } from "@/lib/auth-client";
 import toast from "react-hot-toast";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const SignInForm = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const { data: session, isPending } = useSession();
+
+    const toastShown = useRef(false);
 
     const message = searchParams.get("message");
     const queryString = searchParams.toString();
 
+    const callbackURL = searchParams.get("callbackURL");
+
+    const redirectPath =
+        callbackURL &&
+        callbackURL.startsWith("/") &&
+        !callbackURL.startsWith("//") &&
+        !callbackURL.startsWith("/sign-in")
+            ? callbackURL
+            : "/";
+
     useEffect(() => {
-        if (message !== "login-required") return;
+        if (isPending || !session?.user) return;
+
+        router.replace(redirectPath);
+    }, [isPending, session?.user, redirectPath, router]);
+
+    useEffect(() => {
+        if (
+            isPending ||
+            session?.user ||
+            message !== "login-required" ||
+            toastShown.current
+        ) {
+            return;
+        }
+
+        toastShown.current = true;
 
         const params = new URLSearchParams(queryString);
         params.delete("message");
@@ -35,19 +63,10 @@ const SignInForm = () => {
         );
 
         toast.error("এই পেজটি দেখতে আগে লগইন করুন।");
-    }, [message, queryString, router]);
+    }, [isPending, session?.user, message, queryString, router]);
 
     const onSubmit = async (e) => {
         e.preventDefault();
-
-        const callbackURL = searchParams.get("callbackURL");
-
-        const redirectPath =
-            callbackURL &&
-                callbackURL.startsWith("/") &&
-                !callbackURL.startsWith("//")
-                ? callbackURL
-                : "/";
 
         try {
             const formData = new FormData(e.currentTarget);
@@ -70,10 +89,10 @@ const SignInForm = () => {
             }
 
             toast.success("Logged in successfully!");
-
             router.replace(redirectPath);
         } catch (error) {
             console.error("Login error:", error);
+
             toast.error(
                 error instanceof Error ? error.message : "Login failed!"
             );
@@ -84,7 +103,7 @@ const SignInForm = () => {
         try {
             const { error } = await signIn.social({
                 provider: "google",
-                callbackURL: searchParams.get("callbackURL") || "/",
+                callbackURL: redirectPath,
             });
 
             if (error) {
@@ -100,7 +119,7 @@ const SignInForm = () => {
         try {
             const { error } = await signIn.social({
                 provider: "github",
-                callbackURL: searchParams.get("callbackURL") || "/",
+                callbackURL: redirectPath,
             });
 
             if (error) {
@@ -111,6 +130,14 @@ const SignInForm = () => {
             toast.error("GitHub login failed!");
         }
     };
+
+    if (isPending || session?.user) {
+        return (
+            <main className="flex min-h-screen items-center justify-center bg-gray-50">
+                <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-green-700" />
+            </main>
+        );
+    }
 
     return (
         <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-8 sm:px-6 sm:py-10">
@@ -188,9 +215,11 @@ const SignInForm = () => {
 
                         <div className="my-1 flex w-full items-center gap-3">
                             <div className="h-px flex-1 bg-gray-200" />
+
                             <span className="shrink-0 text-xs text-gray-500">
                                 অথবা
                             </span>
+
                             <div className="h-px flex-1 bg-gray-200" />
                         </div>
 
