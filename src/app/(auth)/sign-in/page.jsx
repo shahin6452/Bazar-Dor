@@ -40,6 +40,15 @@ const SignInForm = () => {
     const onSubmit = async (e) => {
         e.preventDefault();
 
+        const callbackURL = searchParams.get("callbackURL");
+
+        const redirectPath =
+            callbackURL &&
+                callbackURL.startsWith("/") &&
+                !callbackURL.startsWith("//")
+                ? callbackURL
+                : "/";
+
         try {
             const formData = new FormData(e.currentTarget);
             const data = Object.fromEntries(formData.entries());
@@ -48,7 +57,6 @@ const SignInForm = () => {
                 email: data.email,
                 password: data.password,
                 rememberMe: true,
-                callbackURL: searchParams.get("callbackURL") || "/",
             });
 
             if (error) {
@@ -62,9 +70,10 @@ const SignInForm = () => {
             }
 
             toast.success("Logged in successfully!");
+
+            router.replace(redirectPath);
         } catch (error) {
             console.error("Login error:", error);
-
             toast.error(
                 error instanceof Error ? error.message : "Login failed!"
             );
